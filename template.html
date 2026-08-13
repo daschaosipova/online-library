@@ -15,7 +15,7 @@
       <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
       <div class="col-md-4">
-        <img src="{{ book.img_src}}" class="img-fluid rounded-start" alt="Изображения нет">
+        <img src="{{ book.img_src }}" class="img-fluid rounded-start" alt="{% if book.img_src %}Обложка книги «{{ book.title }}»{% else %}Изображения нет{% endif %}">
       </div>
       <div class="col-md-8">
         <div class="card-body">
