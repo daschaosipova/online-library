@@ -26,7 +26,11 @@
                     <div class="card-body">
                       <h5 class="card-title">{{ book.title }}</h5>
                       <p class="card-text">{{ book.author }}</p>
-                      <p><a class="card-text"><small class="text-body-secondary" href="{{ book.book_path }}" target="_blank">Читать</small></a></p>
+                      <p>
+                        <a class="card-text text-body-secondary text-decoration-none" href="{{ book.book_path }}" target="_blank">
+                          <small>Читать</small>
+                        </a>
+                      </p>
                     </div>
                   </div>
                 </div>

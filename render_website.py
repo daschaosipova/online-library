@@ -1,5 +1,5 @@
 import json
-
+from urllib.parse import quote
 from livereload import Server
 from more_itertools import chunked
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -9,6 +9,12 @@ def on_reload():
     with open("meta_data.json", "r", encoding="utf-8") as meta_data:
         books_json = meta_data.read()
     library = json.loads(books_json)
+
+    for book in library:
+        if "img_src" in book:
+            book["img_src"] = quote(book["img_src"])
+        if "book_path" in book:
+            book["book_path"] = quote(book["book_path"])
 
     env = Environment(
         loader=FileSystemLoader('.'),
