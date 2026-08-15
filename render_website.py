@@ -1,4 +1,6 @@
 import json
+import os
+import more_itertools
 from urllib.parse import quote
 from livereload import Server
 from more_itertools import chunked
@@ -16,20 +18,34 @@ def on_reload():
         if "book_path" in book:
             book["book_path"] = quote(book["book_path"])
 
+    os.makedirs("pages", exist_ok=True)
+    
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
     )
     template = env.get_template('template.html')
 
-    rendered_page = template.render(
-        books=chunked(library, 2)
-    )
+    books_per_page = 10
+    pages = list(more_itertools.chunked(library, books_per_page))
+    total_pages = len(pages)
 
-    with open("index.html", "w", encoding="utf8") as file:
-        file.write(rendered_page)
+    for page_num, page_books in enumerate(pages, start=1):
 
-    print("Site rebuilt")
+        books_rows = list(more_itertools.chunked(page_books, 2))
+
+        rendered_page = template.render(
+            books=books_rows,
+            current_page=page_num,
+            total_pages=total_pages
+        )
+
+        file_path = os.path.join("pages", f"index{page_num}.html")
+        
+        with open(file_path, "w", encoding="utf8") as file:
+            file.write(rendered_page)
+
+    print("All pages rebuilt successfully")
 
 
 def main():
@@ -38,7 +54,7 @@ def main():
     server = Server()
     server.watch('template.html', on_reload)
     server.watch('meta_data.json', on_reload)
-    server.serve(root='.')
+    server.serve(root='pages', default_filename='index1.html')
 
 
 if __name__ == "__main__":

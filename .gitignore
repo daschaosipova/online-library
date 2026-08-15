@@ -176,6 +176,7 @@ cython_debug/
 # Project folders
 img/
 books/
+pages/
 
 # Generated files
 /index.html
