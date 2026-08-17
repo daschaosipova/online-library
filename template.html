@@ -62,7 +62,13 @@
                     <div class="card-body">
                       <h5 class="card-title">{{ book.title }}</h5>
                       <p class="card-text">{{ book.author }}</p>
-                      <p>
+                      <div class="d-flex flex-wrap mb-3">
+                        {% for genre in book.genres.split(',') %}
+                          <span class="badge bg-light text-dark fw-normal border mr-2 mb-1">
+                            {{ genre | trim | replace('.', '') }}
+                          </span>
+                        {% endfor %}
+                      </div>
                         <a class="card-text text-primary text-decoration-none" href="{{ book.book_path }}" target="_blank">
                           Читать
                         </a>
