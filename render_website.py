@@ -13,10 +13,10 @@ def on_reload():
     library = json.loads(books_json)
 
     for book in library:
-        if "img_src" in book:
-            book["img_src"] = quote(book["img_src"])
-        if "book_path" in book:
-            book["book_path"] = quote(book["book_path"])
+        if "img_src" in book and book["img_src"]:
+            book["img_src"] = quote(book["img_src"], safe="/:") 
+        if "book_path" in book and book["book_path"]:
+            book["book_path"] = quote(book["book_path"], safe="/:")
 
     os.makedirs("pages", exist_ok=True)
     
@@ -31,13 +31,18 @@ def on_reload():
     total_pages = len(pages)
 
     for page_num, page_books in enumerate(pages, start=1):
-
         books_rows = list(more_itertools.chunked(page_books, 2))
+
+        has_previous_page = page_num > 1
+        has_next_page = page_num < total_pages
+
 
         rendered_page = template.render(
             books=books_rows,
             current_page=page_num,
-            total_pages=total_pages
+            total_pages=total_pages,
+            has_previous=has_previous_page,  
+            has_next=has_next_page,           
         )
 
         file_path = os.path.join("pages", f"index{page_num}.html")
