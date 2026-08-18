@@ -1,10 +1,10 @@
 import json
 import os
-import more_itertools
 from urllib.parse import quote
-from livereload import Server
-from more_itertools import chunked
+
+import more_itertools
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from livereload import Server
 
 
 def on_reload():
@@ -14,17 +14,19 @@ def on_reload():
 
     for book in library:
         if "img_src" in book and book["img_src"]:
-            book["img_src"] = quote(book["img_src"], safe="/:") 
+            book["img_src"] = quote(book["img_src"], safe="/:")
         if "book_path" in book and book["book_path"]:
             book["book_path"] = quote(book["book_path"], safe="/:")
 
     os.makedirs("pages", exist_ok=True)
-    
+
     env = Environment(
-        loader=FileSystemLoader('.'),
-        autoescape=select_autoescape(['html', 'xml'])
+        loader=FileSystemLoader("."),
+        autoescape=select_autoescape(["html", "xml"]),
+        trim_blocks=True,
+        lstrip_blocks=True,
     )
-    template = env.get_template('template.html')
+    template = env.get_template("template.html")
 
     books_per_page = 10
     pages = list(more_itertools.chunked(library, books_per_page))
@@ -36,19 +38,33 @@ def on_reload():
         has_previous_page = page_num > 1
         has_next_page = page_num < total_pages
 
-
         rendered_page = template.render(
             books=books_rows,
             current_page=page_num,
             total_pages=total_pages,
-            has_previous=has_previous_page,  
-            has_next=has_next_page,           
+            has_previous=has_previous_page,
+            has_next=has_next_page,
         )
 
         file_path = os.path.join("pages", f"index{page_num}.html")
-        
+
         with open(file_path, "w", encoding="utf8") as file:
             file.write(rendered_page)
+
+    redirect_page = """<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url=pages/index1.html">
+    <title>Онлайн-библиотека</title>
+  </head>
+  <body>
+    <p><a href="pages/index1.html">Перейти к библиотеке</a></p>
+  </body>
+</html>
+"""
+    with open("index.html", "w", encoding="utf8") as file:
+        file.write(redirect_page)
 
     print("All pages rebuilt successfully")
 
@@ -57,9 +73,9 @@ def main():
     on_reload()
 
     server = Server()
-    server.watch('template.html', on_reload)
-    server.watch('meta_data.json', on_reload)
-    server.serve(root='pages', default_filename='index1.html')
+    server.watch("template.html", on_reload)
+    server.watch("meta_data.json", on_reload)
+    server.serve(root="pages", default_filename="index1.html")
 
 
 if __name__ == "__main__":

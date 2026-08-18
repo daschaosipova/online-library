@@ -173,13 +173,9 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Project folders
-img/
-books/
-pages/
-
-# Generated files
-/index.html
+# Project folders (root-only; the offline site lives in pages/)
+/img/
+/books/
 
 # Cursor  
 #  Cursor is an AI-powered code editor.`.cursorignore` specifies files/directories to 
