@@ -31,8 +31,7 @@ def parse_args():
 
 def load_library(meta_path):
     with open(meta_path, "r", encoding="utf-8") as meta_data:
-        books_json = meta_data.read()
-    library = json.loads(books_json)
+        library = json.load(meta_data)
 
     for book in library:
         if "img_src" in book and book["img_src"]:
