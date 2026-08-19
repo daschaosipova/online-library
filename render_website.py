@@ -10,19 +10,6 @@ SITE_DIR = "static"
 BOOKS_PER_PAGE = 10
 BOOKS_PER_ROW = 2
 
-REDIRECT_PAGE = f"""<!doctype html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url={SITE_DIR}/index1.html">
-    <title>Онлайн-библиотека</title>
-  </head>
-  <body>
-    <p><a href="{SITE_DIR}/index1.html">Перейти к библиотеке</a></p>
-  </body>
-</html>
-"""
-
 
 def load_library():
     with open("meta_data.json", "r", encoding="utf-8") as meta_data:
@@ -37,14 +24,15 @@ def load_library():
     return library
 
 
-def get_template():
+def get_template(template_name):
     env = Environment(
         loader=FileSystemLoader("."),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
         lstrip_blocks=True,
+        keep_trailing_newline=True,
     )
-    return env.get_template("template.html")
+    return env.get_template(template_name)
 
 
 def render_catalog_pages(template, library):
@@ -68,13 +56,15 @@ def render_catalog_pages(template, library):
 
 
 def write_redirect_page():
+    template = get_template("redirect.html")
+    redirect_page = template.render(target_url=f"{SITE_DIR}/index1.html")
     with open("index.html", "w", encoding="utf8") as file:
-        file.write(REDIRECT_PAGE)
+        file.write(redirect_page)
 
 
 def on_reload():
     library = load_library()
-    template = get_template()
+    template = get_template("template.html")
 
     os.makedirs(SITE_DIR, exist_ok=True)
 
@@ -89,6 +79,7 @@ def main():
 
     server = Server()
     server.watch("template.html", on_reload)
+    server.watch("redirect.html", on_reload)
     server.watch("meta_data.json", on_reload)
     server.serve(root=SITE_DIR, default_filename="index1.html")
 
