@@ -88,4 +88,5 @@ python render_website.py
 - Первоначально данные (список книг, обложки, тексты) были собраны парсером с сайта [tululu.org](https://tululu.org/).
 
   ## Скриншот сайта
-  <img width="1919" height="1018" alt="image" src="https://github.com/user-attachments/assets/0021de83-9398-4425-b610-325cf5dfc9fb" />
+  <img width="1595" height="1022" alt="image" src="https://github.com/user-attachments/assets/3746fd16-80d9-4735-947e-cfbd029c74d5" />
+
