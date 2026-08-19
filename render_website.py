@@ -6,18 +6,19 @@ import more_itertools
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 
+SITE_DIR = "static"
 BOOKS_PER_PAGE = 10
 BOOKS_PER_ROW = 2
 
-REDIRECT_PAGE = """<!doctype html>
+REDIRECT_PAGE = f"""<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url=pages/index1.html">
+    <meta http-equiv="refresh" content="0; url={SITE_DIR}/index1.html">
     <title>Онлайн-библиотека</title>
   </head>
   <body>
-    <p><a href="pages/index1.html">Перейти к библиотеке</a></p>
+    <p><a href="{SITE_DIR}/index1.html">Перейти к библиотеке</a></p>
   </body>
 </html>
 """
@@ -61,7 +62,7 @@ def render_catalog_pages(template, library):
             has_next=page_num < total_pages,
         )
 
-        file_path = os.path.join("pages", f"index{page_num}.html")
+        file_path = os.path.join(SITE_DIR, f"index{page_num}.html")
         with open(file_path, "w", encoding="utf8") as file:
             file.write(rendered_page)
 
@@ -75,7 +76,7 @@ def on_reload():
     library = load_library()
     template = get_template()
 
-    os.makedirs("pages", exist_ok=True)
+    os.makedirs(SITE_DIR, exist_ok=True)
 
     render_catalog_pages(template, library)
     write_redirect_page()
@@ -89,7 +90,7 @@ def main():
     server = Server()
     server.watch("template.html", on_reload)
     server.watch("meta_data.json", on_reload)
-    server.serve(root="pages", default_filename="index1.html")
+    server.serve(root=SITE_DIR, default_filename="index1.html")
 
 
 if __name__ == "__main__":

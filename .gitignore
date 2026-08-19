@@ -173,7 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Project folders (root-only; the offline site lives in pages/)
+# Project folders (root-only; the offline site lives in static/)
 /img/
 /books/
 
