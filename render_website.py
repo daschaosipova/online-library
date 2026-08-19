@@ -88,8 +88,6 @@ def on_reload(meta_path, site_dir):
     render_catalog_pages(template, library, site_dir)
     write_redirect_page(site_dir)
 
-    print("All pages rebuilt successfully")
-
 
 def main():
     args = parse_args()
