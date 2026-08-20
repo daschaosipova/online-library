@@ -23,7 +23,7 @@ def parse_args():
     )
     parser.add_argument(
         "--site-dir",
-        default=os.getenv("LIBRARY_SITE_DIR", "static"),
+        default=os.getenv("LIBRARY_SITE_DIR", "pages"),
         help="Каталог для сгенерированных страниц",
     )
     return parser.parse_args()
@@ -98,7 +98,7 @@ def main():
     server.watch("template.html", reload_site)
     server.watch("redirect.html", reload_site)
     server.watch(args.meta_path, reload_site)
-    server.serve(root=args.site_dir, default_filename="index1.html")
+    server.serve(root=".", default_filename=f"{args.site_dir}/index1.html")
 
 
 if __name__ == "__main__":
